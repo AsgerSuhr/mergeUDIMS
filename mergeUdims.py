@@ -77,6 +77,7 @@ def combineMergeUdims(prefix_name, flder, image_type):
 if __name__ == '__main__':
 
     # Python 3.7+
+    
     import subprocess
     try:
         import cv2
@@ -89,11 +90,12 @@ if __name__ == '__main__':
     import os
     import time
     import tifffile as tf
+    from pathfile import Path
 
     print('Make sure that the path to the folder only has the files that you want to'\
           ' merge, \nand only one filetype (either exr or tif)\n')
 
-    flder = input('Please input the path: ')
+    flder = str(Path(input('Please input the path: ')))
     prefix_name = input('please input the final merged filename prefix: ')
     image_type = None
     while image_type != 'exr' and image_type != 'tif':
