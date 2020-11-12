@@ -76,6 +76,7 @@ def combineMergeUdims(prefix_name, flder, image_type):
 
 if __name__ == '__main__':
 
+    # Python 3.7+
     import subprocess
     try:
         import cv2
