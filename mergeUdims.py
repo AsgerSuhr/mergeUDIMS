@@ -1,5 +1,7 @@
 
-def combineMergeUdims(prefix_name, flder, image_type):
+def combineMergeUdims(prefix_name, flder_path, image_type, midValue):
+    flder_path = Path(flder_path)
+    flder = os.listdir(flder_path)
     flderDic = {}
     for nr, i in enumerate(flder):
         try:
@@ -32,22 +34,21 @@ def combineMergeUdims(prefix_name, flder, image_type):
         except:
             pass
 
-
     for key, item in items.items():
+
         if image_type == 'tif':
-            im = cv2.imread(item[0], -1)
+            im = cv2.imread(str(flder_path / item[0]), -1)
         elif image_type == 'exr':
-            im = cv2.imread(item[0], cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
+            im = cv2.imread(str(flder_path / item[0]), cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
         imarray = np.array(im)
         for i in item[1:]:
-
             if image_type == 'tif':
-                im2 = cv2.imread(i, -1)
+                im2 = cv2.imread(str(flder_path / i), -1)
             elif image_type == 'exr':
-                im2 = cv2.imread(i, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
+                im2 = cv2.imread(str(flder_path / i), cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
             imarray2 = np.array(im2)
 
-            fnd = np.where(imarray2 != 0)
+            fnd = np.where(imarray2 != midValue)
 
             lst = []
             for nr, i in enumerate(fnd[0]):
@@ -61,14 +62,16 @@ def combineMergeUdims(prefix_name, flder, image_type):
 
         if image_type == 'tif':
             try:
-                tf.imsave(prefix_name + '_' + key + '.tif', imarray, compress=0)
-            except:
-                pass
+                saving_name = '%s_%s%s' % (prefix_name, key, '.tif')
+                tf.imsave(str(flder_path / saving_name), imarray, compress=0)
+            except Exception as err:
+                print(err)
         elif image_type == 'exr':
             try:
-                cv2.imwrite(prefix_name + '_' + key + '.exr', imarray)
-            except:
-                pass
+                saving_name = '%s_%s%s' % (prefix_name, key, '.exr')
+                cv2.imwrite(str(flder_path / saving_name), imarray)
+            except Exception as err:
+                print(err)
         print('succesfully created file: ', prefix_name + '_' + key)
         print('continueing...')
     input('Done')
@@ -77,27 +80,38 @@ def combineMergeUdims(prefix_name, flder, image_type):
 if __name__ == '__main__':
 
     # Python 3.7+
-    
+
     import subprocess
     try:
         import cv2
+        import numpy as np
+        import tifffile as tf
     except ModuleNotFoundError:
         subprocess.check_call(['python', '-m', 'pip', 'install', 'opencv-python'])
         subprocess.check_call(['python', '-m', 'pip', 'install', 'numpy'])
         subprocess.check_call(['python', '-m', 'pip', 'install', 'tiffile'])
-    import numpy as np
-    import re
-    import os
+        import numpy as np
+        import tifffile as tf
+        import cv2
+    from pathlib import Path
     import time
-    import tifffile as tf
-    from pathfile import Path
+    import os
+    import re
 
     print('Make sure that the path to the folder only has the files that you want to'\
           ' merge, \nand only one filetype (either exr or tif)\n')
 
-    flder = str(Path(input('Please input the path: ')))
+    flder_path = str(Path(input('Please input the path: ')))
+    flder = os.listdir(flder_path)
     prefix_name = input('please input the final merged filename prefix: ')
     image_type = None
     while image_type != 'exr' and image_type != 'tif':
         image_type = input('are the files tif or exr?')
         image_type = image_type.lower()
+
+    midValue = 10.0
+    while midValue > 1.0 or midValue < 0.0:
+        midValue = input('what is the mid value [please input float value between 0 - 1]: ')
+        midValue = float(midValue)
+
+    combineMergeUdims(prefix_name, flder, image_type, midValue)
