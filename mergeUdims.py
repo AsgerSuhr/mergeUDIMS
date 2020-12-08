@@ -1,5 +1,6 @@
 
 def combineMergeUdims(prefix_name, flder_path, image_type, midValue):
+    print(flder_path)
     flder_path = Path(flder_path)
     flder = os.listdir(flder_path)
     flderDic = {}
@@ -102,7 +103,6 @@ if __name__ == '__main__':
           ' merge, \nand only one filetype (either exr or tif)\n')
 
     flder_path = str(Path(input('Please input the path: ')))
-    flder = os.listdir(flder_path)
     prefix_name = input('please input the final merged filename prefix: ')
     image_type = None
     while image_type != 'exr' and image_type != 'tif':
@@ -114,4 +114,4 @@ if __name__ == '__main__':
         midValue = input('what is the mid value [please input float value between 0 - 1]: ')
         midValue = float(midValue)
 
-    combineMergeUdims(prefix_name, flder, image_type, midValue)
+    combineMergeUdims(prefix_name, flder_path, image_type, midValue)
