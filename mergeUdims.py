@@ -88,7 +88,7 @@ if __name__ == '__main__':
         import tifffile as tf
     except ModuleNotFoundError:
         subprocess.check_call(['python', '-m', 'pip', 'install', 'opencv-python'])
-        subprocess.check_call(['python', '-m', 'pip', 'install', 'numpy'])
+        subprocess.check_call(['python', '-m', 'pip', 'install', 'numpy==1.19.3'])
         subprocess.check_call(['python', '-m', 'pip', 'install', 'tiffile'])
         import numpy as np
         import tifffile as tf
