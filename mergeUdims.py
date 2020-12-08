@@ -1,6 +1,5 @@
 
 def combineMergeUdims(prefix_name, flder_path, image_type, midValue):
-    print(flder_path)
     flder_path = Path(flder_path)
     flder = os.listdir(flder_path)
     flderDic = {}
